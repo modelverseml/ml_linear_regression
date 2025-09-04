@@ -255,6 +255,11 @@ These behaviors are closely related to the concepts of bias and variance:
     - Models with high variance fit the training data too closely, even capturing noise. This makes them unstable—small changes in the dataset lead to large changes in predictions (overfitting).
     - A good model should have low variance, meaning it generalizes well and captures the true underlying patterns without being overly sensitive to fluctuations in the training data.
 
+<p align="center">
+<img src="images/trade_off.png" alt="independence" height="300" width="45%"/>
+<img src="images/bullseye.png" alt="independence" height="300" width="45%"/>
+</p>
+
 For an ideal model, both bias and variance should be low — but in reality, such a model doesn’t exist. Instead, we face a trade-off between the two.
 
 - Underfitting: Bias is high and variance is low (model is too simple, missing patterns).
@@ -262,3 +267,79 @@ For an ideal model, both bias and variance should be low — but in reality, suc
 - Overfitting: Bias is low but variance is high (model is too complex, capturing noise).
 
 Having too many features can increase model complexity and lead to overfitting. That’s why feature selection or dimensionality reduction is often applied to simplify the model and improve generalization.
+
+## Metrics
+
+So far, we’ve covered all the prerequisites and steps for model tuning. Now, the next step is to evaluate our regression model. To do this, we use a few important metrics, which help us measure how well the model performs on unseen data. The most commonly used metrics are:
+
+<p align="center">
+<img src="images/metrics.webp" alt="metrics"  width="50%"/>
+</p>
+
+### Mean Absolute Error (MAE)
+
+The Mean Absolute Error is the average of the absolute differences between the predicted and actual values.
+
+Formula : 
+
+MAE : (1 / n ) Σ | y<sub>i</sub> – ŷ<sub>i</sub> |
+
+- Easy to interpret since it measures the average error directly.
+- However, it is less sensitive to outliers, meaning extreme values do not heavily impact the error.
+
+### Mean Squared Error (MSE)
+
+The Mean Squared Error is the average of the squared differences between the predicted and actual values.
+
+Formula : 
+
+MSE : (1 / n ) Σ ( y<sub>i</sub> – ŷ<sub>i</sub> )<sup>2</sup>
+  
+- Squaring the errors gives more weight to larger errors.
+
+- This makes MSE more sensitive to outliers compared to MAE.
+
+### Root Mean Squared Error (RMSE)
+
+The Root Mean Squared Error is the square root of the average of the squared differences between the predicted and actual values.
+
+Formula : 
+
+RMSE : √ ((1 / n ) Σ ( y<sub>i</sub> – ŷ<sub>i</sub> )<sup>2</sup>)
+
+- RMSE penalizes large errors more strongly than MAE.
+
+- Unlike MSE, RMSE is expressed in the same units as the output variable, making it easier to interpret in practice.
+
+### R² Score (Coefficient of Determination)
+
+The R² score measures how well the regression model explains the variability of the target variable compared to its mean.
+
+Formula 
+
+R² = 1 – (SSE / SST)
+
+SSE = Σ (yᵢ – ŷᵢ)² → sum of squared errors (residuals)
+
+SST = Σ (yᵢ – ȳ)² → total variation in the data
+
+- R² ranges between 0 and 1.
+- A value close to 1 means the model explains most of the variance in the data, while a value near 0 means poor explanatory power.
+
+
+### Adjusted R² 
+
+The Adjusted R² modifies the R² score to account for the number of predictors (features) in the model.
+
+
+Formula:
+Adjusted R² = 1 – [ (1 – R²) × (n – 1) / (n – p – 1) \]
+
+- n = number of observations
+
+- p = number of predictors (features)
+
+- Unlike R², which can artificially increase when more features are added, Adjusted R² penalizes unnecessary predictors. This is because adding too many features can increase model complexity and lead to overfitting
+
+- It is more reliable in multiple linear regression, ensuring that only meaningful features improve the score.
+
