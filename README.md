@@ -237,3 +237,28 @@ t-statistic = ( β̂ - μ )/ SE(β̂<sub>j</sub>)​​ = ( β̂ - 0 )/ SE(β̂<
 
 ## Overfitting and Underfitting in Linear Regression
 
+So far, we have focused on the assumptions and requirements before training a regression model and how to interpret the results. But we haven’t yet discussed an equally important aspect: how well the trained model is actually performing.
+
+After training, there are two possible scenarios:
+
+The model performs well on the training set but poorly on the test set → this is called overfitting.
+
+The model performs poorly on both the training set and the test set → this is called underfitting.
+
+These behaviors are closely related to the concepts of bias and variance:
+
+- Bias : It measures how far a model’s predictions are from the actual values, especially on unseen (future) data.
+    - Models with high bias are too simple, missing important patterns in the data (underfitting).
+    - Linear algorithms usually have higher bias—they are fast and easy to understand but less flexible, which limits their predictive power on complex problems.
+
+- Variance : how sensitive is the model for the change of the traning data
+    - Models with high variance fit the training data too closely, even capturing noise. This makes them unstable—small changes in the dataset lead to large changes in predictions (overfitting).
+    - A good model should have low variance, meaning it generalizes well and captures the true underlying patterns without being overly sensitive to fluctuations in the training data.
+
+For an ideal model, both bias and variance should be low — but in reality, such a model doesn’t exist. Instead, we face a trade-off between the two.
+
+- Underfitting: Bias is high and variance is low (model is too simple, missing patterns).
+
+- Overfitting: Bias is low but variance is high (model is too complex, capturing noise).
+
+Having too many features can increase model complexity and lead to overfitting. That’s why feature selection or dimensionality reduction is often applied to simplify the model and improve generalization.
