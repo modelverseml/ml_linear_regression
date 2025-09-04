@@ -35,6 +35,10 @@ For linear regression to give reliable results, certain assumptions must hold tr
   A single scatter plot is not enough. Instead, use:
   -  **Pair plots / scatter-matrix** → quick glance at pairwise relations  
   -  **Correlation heatmap** → strength & direction of linear association
+ 
+<p align="center">
+<img src="images/linear-nonlinear-corrrelation.jpg" alt="relation" width="50%"/>
+</p>
 
 ###  Fitting the Best Line
 
@@ -90,6 +94,10 @@ To check this assumption, we usually:
 - If the errors are independent → the plot should look like random scatter around zero with no visible pattern.
 - If not → you may see trends, cycles, or clustering, which indicates correlation among errors.
 
+<p align="center">
+<img src="images/errors_independece.webp" alt="independence" width="50%"/>
+</p>
+
 ## Normality of Error Terms:
 
 It indicates that the errors (residuals) from predictions are random and follow a normal distribution.
@@ -103,6 +111,10 @@ This assumption matters because:
 We usually check this by:
 
 - Histogram of residuals → should look bell-shaped.
+
+<p align="center">
+<img src="images/errors_normality.webp" alt="Normality" width="50%"/>
+</p>
 
 ## Homoscedasticity:
 
@@ -121,3 +133,7 @@ Why it matters:
 How to check:
 
 - Residuals vs fitted values plot → should show random scatter with no clear pattern and roughly equal spread
+
+<p align="center">
+<img src="images/constant_variation.webp" alt="variation" width="50%"/>
+</p>
