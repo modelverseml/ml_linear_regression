@@ -137,3 +137,103 @@ How to check:
 <p align="center">
 <img src="images/constant_variation.webp" alt="variation" width="50%"/>
 </p>
+
+## Multicollinearity
+
+Multicollinearity occurs when two or more input features are highly correlated (dependent) with each other. Because of this, the model struggles to distinguish the individual effect of each feature on the output.
+
+Suppose we have three features: f1, f2, f3 and an output y, where
+
+f3 = f1 + f2
+
+In this case, f3 is completely dependent on f1 and f2. Because of this strong linear relationship, the regression model cannot clearly separate the individual effects of f1, f2, and f3 on y.
+
+### How to check:
+- Checking the correlation coffient matrix or heatmap
+- Variance inflation factors > 10 usually indicates problematic multicollinearity.
+
+### Variance Inflation Factor (VIF) : 
+
+VIF is a metric used to detect multicollinearity among input features in regression. It measures how much the variance of a regression coefficient (β) is inflated because of linear dependence with other features.
+
+Formula:
+
+For a feature X<sub>j</sub> 
+
+VIF<sub>j</sub>  = 1 / (1−R<sub>j</sub><sup>2</sup>)
+​
+
+where  
+R<sub>j</sub><sup>2</sup> - is the coefficient of determination obtained by regressing X<sub>j</sub>  on all the other features. (Explain this later)
+
+Interpretation:
+
+- VIF = 1 → No correlation with other features.
+
+- VIF between 1 and 5 → Moderate correlation (usually acceptable).
+
+- VIF > 10 → High multicollinearity (problematic, needs attention).
+
+## Feature Relevance
+
+We can’t simply build a model with every feature available. For example, suppose we have 100 features, all independent of each other. Do we really need to use all 100? Not necessarily.
+
+Instead, we should focus on the most important features—the ones that contribute most to explaining the variation in the target variable. Often, selecting the top 15–20 features is enough to build a strong model.
+
+But how do we determine which features are most important?
+
+### Approaches to Identify Feature Relevance:
+
+- Model-based selection
+
+  - Build the model with all features, then reduce features step by step and check performance.
+
+  - Example: Recursive Feature Elimination (RFE).
+ 
+- Incremental feature addition
+
+  - Start with a smaller subset of features (say 10).
+
+  - Add more features gradually and evaluate performance.
+
+  - Stop when the model is already able to explain ~90% of the variation in the data.
+ 
+- Feature importance scores
+
+  - Use techniques like coefficients in linear regression, feature importance in tree-based models, or LASSO regularization to rank features.
+
+## Hypothesis Testing
+
+In linear regression, hypothesis testing is used to check whether the input features (independent variables) have a statistically significant effect on the output (dependent variable).
+
+We mainly test hypotheses about the regression coefficients (β values).
+
+First we start with hypothesis as follows
+- Null Hypothesis (H<sub>0</sub>): β<sub>j</sub> = 0 → The feature 𝑋<sub>𝑗</sub> has no effect on the output
+- Alternative Hypothesis (H₁): β<sub>j</sub> ≠ 0 → The feature 𝑋<sub>𝑗</sub> has a significant effect on the output.
+
+### T - Distribution
+
+t-statistic = ( β̂ - μ )/ SE(β̂<sub>j</sub>)​​ = ( β̂ - 0 )/ SE(β̂<sub>j</sub>)​​
+
+-  If t <sub>statistic</sub> > t <sub>critical</sub> (α=0.05 ), reject H <sub>0</sub> → β<sub>j</sub> is important
+
+### P - value
+
+- If p-value < significance level (e.g., 0.05), reject H₀ → the feature is important.
+
+### Global Test (F-test):
+
+- Hypothesis:
+  - Null Hypothesis (H<sub>0</sub>): ALL β<sub>j</sub> = 0 
+  - Alternative Hypothesis (H₁): At least one β<sub>j</sub> ≠ 0
+ 
+  F <sub>statistic</sub> > F <sub>critical</sub> , reject H<sub>0</sub> → At least one feature is important
+
+**For a regression model, we prefer:**
+- Low p-values for individual coefficients (β<sub>j</sub>)
+- Large |t-statistics| for coefficients
+- High F-statistic overall
+
+## Overfitting and Underfitting in Linear Regression
+
