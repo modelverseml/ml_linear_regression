@@ -25,13 +25,11 @@ class GradientDescentRegressionModel:
         for _ in range(10000):
             b = b - alpha * (X.T @(X@b - Y)/X.shape[0])
             
-
         self.cofficients = b
         
 
     def get_prameters(self):
 
-        
         coef_df = pd.DataFrame({
             "Feature": self.feature_names,
             "Coefficient": self.cofficients.round(3)  
@@ -39,8 +37,6 @@ class GradientDescentRegressionModel:
         
         return coef_df
         
-
-    
     def predict(self, X):
 
         X = np.hstack([np.ones((X.shape[0], 1)), X])
