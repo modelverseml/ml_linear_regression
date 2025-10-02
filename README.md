@@ -46,7 +46,7 @@ For two features x<sub>1</sub>, x<sub>2</sub> and output y , the model will be
 
 ŷ = β<sub>0</sub> +  β<sub>1</sub> . x<sub>2</sub> +  β<sub>2</sub>.x<sub>2</sub> 
 
-We chose  β<sub>0</sub>,β<sub>1</sub>, β<sub>2</sub such that to reduce sum of squared error.
+We chose  β<sub>0</sub>,β<sub>1</sub>, β<sub>2</sub> such that to reduce sum of squared error.
 
 SSE(β) = ∑<sub>i=1</sub><sup>n</sup> ( ŷ<sub>i</sub> - y<sub>i</sub> )<sup>2</sup> = ∑<sub>i=1</sub><sup>n</sup> ( β<sub>0</sub> +  β<sub>1</sub> . x<sub>1i</sub> +  β<sub>2</sub>.x<sub>2i</sub>  - y<sub>i</sub> )<sup>2</sup>
 
