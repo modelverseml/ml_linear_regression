@@ -4,6 +4,108 @@ Linear regression is often considered the starting point for anyone beginning th
 
 At its core, linear regression is about fitting a straight line to data. If the dataset contains only a single feature, the technique is called Simple Linear Regression. When multiple features are involved, it becomes Multiple Linear Regression.
 
+## Repository Structure
+
+```
+ml_linear_regression/
+├── README.md
+├── requirements.txt
+├── linear_regression.ipynb                          # End-to-end walkthrough
+├── closed_form_model_building.py                    # Normal equation: β = (XᵀX)⁻¹Xᵀy
+├── gradient_descent_model_building.py               # Batch gradient descent
+├── stochastic_gradient_descent_model_building.py    # SGD implementation
+├── sklearn_model_building.py                        # scikit-learn LinearRegression
+├── statsmodel_model_building.py                     # statsmodels OLS (with inference)
+├── regression_metrics.py                            # MAE, MSE, RMSE, R², Adjusted R²
+├── automated_feature_selection.py                   # Backward elimination using p-value + VIF
+├── recursive_feature_elimination.py                 # RFE wrapper
+├── variance_inflation_factor_data.py                # VIF computation for multicollinearity
+└── images/
+```
+
+## Getting Started
+
+```bash
+git clone https://github.com/modelverseml/ml_linear_regression.git
+cd ml_linear_regression
+pip install -r requirements.txt
+jupyter notebook linear_regression.ipynb
+```
+
+## Dataset
+
+The notebook uses **USA Real Estate (2019–2021)** — listing-level home price data. The Excel file `usa_real_estate_2019_2021.xlsx` is ~81 MB and is included in the repo for reproducibility. If you'd rather download it separately, place the file at the repo root before running the notebook.
+
+## Topics Covered
+
+1. [Assumptions of Linear Regression](#assumptions-of-linear-regression) — linearity, independence, normality, homoscedasticity, no multicollinearity, no autocorrelation, feature relevance
+2. [Fitting the Best Line](#fitting-the-best-line) — closed-form normal equation and gradient descent
+3. [Hypothesis Testing](#hypothesis-testing) — t-test, p-value, and global F-test for coefficient significance
+4. [Overfitting / Underfitting](#overfitting-and-underfitting-in-linear-regression) — bias-variance trade-off
+5. [Metrics](#metrics) — MAE, MSE, RMSE, R², Adjusted R²
+
+## Code Modules
+
+All four fitting approaches (closed-form, batch GD, mini-batch SGD, scikit-learn, statsmodels) expose the same `build_model / predict / get_parameters` interface so they can be swapped freely in the notebook.
+
+### Fitting a model
+
+```python
+from closed_form_model_building import ClosedFormRegressionModel
+from gradient_descent_model_building import GradientDescentRegressionModel
+from stochastic_gradient_descent_model_building import StochasticGradientDescentRegressionModel
+from sklearn_model_building import SkLearnRegressionModel
+from statsmodel_model_building import SMRegressionModel
+
+# Closed-form (normal equation)
+model = ClosedFormRegressionModel(X_train, y_train)
+model.build_model()
+y_pred = model.predict(X_test)
+model.get_parameters()              # DataFrame of (feature, coefficient)
+
+# Batch gradient descent — learning rate & iterations are configurable
+model = GradientDescentRegressionModel(X_train, y_train, learning_rate=0.1, n_iterations=10000)
+
+# Mini-batch SGD
+model = StochasticGradientDescentRegressionModel(X_train, y_train, epochs=50, batch_size=32, learning_rate=0.01)
+
+# scikit-learn
+model = SkLearnRegressionModel(X_train, y_train)
+
+# statsmodels (also exposes .summary() with std-errors, t/p-values, F-stat)
+model = SMRegressionModel(X_train, y_train)
+model.build_model()
+print(model.summary())
+```
+
+### Evaluating a model
+
+```python
+from regression_metrics import RegressionMetrics
+
+# Pass n_features to also get Adjusted R²
+metrics = RegressionMetrics(y_test, model.predict(X_test), n_features=X_test.shape[1])
+metrics.get_metrics()        # MAE, MSE, RMSE, R², Adjusted R²
+metrics.plot_residuals()     # Residuals-vs-fitted + residual histogram
+```
+
+### Feature selection
+
+```python
+from recursive_feature_elimination import RfeClass
+from automated_feature_selection import final_data
+from variance_inflation_factor_data import VIF
+
+# Pick top-k features by sklearn RFE
+rfe = RfeClass(X_train, y_train, number_of_features=20)
+top_columns = rfe.get_rfe_output()
+
+# Backward elimination until every feature has p ≤ 0.05 and VIF ≤ 10
+selected = final_data(X_train, y_train)
+
+# Standalone VIF check
+vif_df = VIF(X_train).get_vif_values()
+```
 
 ### Assumptions of Linear Regression
 
@@ -64,9 +166,9 @@ X = [1  x<sub>1</sub>  x<sub>2</sub> \]  Y = y
   - Substituting this into the update rule gives: βⱼ = βⱼ + 2α ∑ ( yᵢ - ŷᵢ ) Xᵢⱼ
   - We apply this update to all β coefficients in each iteration. By adjusting the learning rate α and repeating the process iteratively, we gradually minimize the error until the model converges.
 
-**The code for these two methods was provided above as separate functions, please check it out.**
+Both methods are implemented from scratch in this repo — see [`closed_form_model_building.py`](closed_form_model_building.py) for the normal-equation solution and [`gradient_descent_model_building.py`](gradient_descent_model_building.py) / [`stochastic_gradient_descent_model_building.py`](stochastic_gradient_descent_model_building.py) for the iterative variants.
 
-Those implementations were just to demonstrate how the actual calculations work. In practice, you don’t need to perform these steps manually—libraries like statsmodels and scikit-learn handle them automatically once you provide the input and output data.
+These from-scratch implementations are pedagogical; in practice you would use [`sklearn_model_building.py`](sklearn_model_building.py) (scikit-learn's `LinearRegression`) or [`statsmodel_model_building.py`](statsmodel_model_building.py) (statsmodels OLS, which also reports per-coefficient inference statistics).
 
 ## Error Independence:
 
