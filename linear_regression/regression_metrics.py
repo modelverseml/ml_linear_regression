@@ -1,35 +1,30 @@
-"""
-Regression Metrics & Residual Diagnostics
------------------------------------------
-Reports the standard regression metrics (MAE, MSE, RMSE, R², Adjusted R²)
-and produces residual plots used to check the linear-regression assumptions
-discussed in the README:
+"""Regression metrics and residual diagnostics.
 
-    - Residuals vs fitted   → linearity + homoscedasticity
-    - Residual histogram    → normality of errors
+Reports the standard regression metrics (MAE, MSE, RMSE, R-squared, adjusted
+R-squared) and draws the residual plots used to check the linear-regression
+assumptions discussed in the README:
 
-Adjusted R² requires the number of predictors (`n_features`); pass it in
-to enable that metric.
+    - residuals vs fitted  -> linearity and constant variance (homoscedasticity)
+    - residual histogram   -> normality of the errors
+
+Adjusted R-squared needs the number of predictors, so pass n_features to enable it.
 """
 
-import numpy as np
 import matplotlib.pyplot as plt
+import numpy as np
 import seaborn as sns
 from sklearn.metrics import mean_absolute_error, mean_squared_error, r2_score
 
 
 class RegressionMetrics:
-
     def __init__(self, actual, predict, n_features=None):
-
-        # Convert to numpy to avoid pandas index-alignment surprises when subtracting.
+        # Convert to numpy to avoid pandas index-alignment surprises on subtraction.
         self.actual = np.asarray(actual)
         self.predict = np.asarray(predict)
         self.n_features = n_features
 
     def get_metrics(self):
-        """Print MAE, MSE, RMSE, R², and Adjusted R² if n_features is known."""
-
+        """Print MAE, MSE, RMSE, R-squared, and adjusted R-squared if possible."""
         mae = mean_absolute_error(self.actual, self.predict)
         mse = mean_squared_error(self.actual, self.predict)
         rmse = np.sqrt(mse)
@@ -38,22 +33,21 @@ class RegressionMetrics:
         print(f"MAE  : {mae:.4f}")
         print(f"MSE  : {mse:.4f}")
         print(f"RMSE : {rmse:.4f}")
-        print(f"R²   : {r2:.4f}")
+        print(f"R2   : {r2:.4f}")
 
         if self.n_features is not None:
-            # Adjusted R² penalises adding features that do not improve fit.
+            # Adjusted R-squared penalises features that do not improve the fit.
             n = len(self.actual)
             p = self.n_features
             adj_r2 = 1 - (1 - r2) * (n - 1) / (n - p - 1)
-            print(f"Adj R² : {adj_r2:.4f}")
+            print(f"Adj R2 : {adj_r2:.4f}")
 
     def plot_residuals(self):
-        """Residuals-vs-fitted and residual-distribution diagnostics."""
-
+        """Show residuals-vs-fitted and residual-distribution diagnostics."""
         residuals = self.actual - self.predict
 
         plt.scatter(self.predict, residuals, alpha=0.5)
-        plt.axhline(0, color='red', linestyle='--')
+        plt.axhline(0, color="red", linestyle="--")
         plt.xlabel("Predicted Values")
         plt.ylabel("Residuals")
         plt.title("Residuals vs Fitted")

@@ -1,12 +1,11 @@
-"""
-Closed-form (Normal Equation) Linear Regression
------------------------------------------------
-Solves the OLS regression problem analytically using the normal equation:
+"""Closed-form (normal equation) linear regression.
+
+Solves the OLS problem analytically:
 
     beta = (X^T X)^(-1) X^T y
 
-This has a unique closed-form solution whenever X^T X is invertible. When it is
-not (e.g. perfectly collinear features), we fall back to the Moore-Penrose
+This has a unique solution whenever X^T X is invertible. When it is not (for
+example with perfectly collinear features) we fall back to the Moore-Penrose
 pseudo-inverse, which gives the minimum-norm least-squares solution.
 """
 
@@ -15,9 +14,7 @@ import pandas as pd
 
 
 class ClosedFormRegressionModel:
-
     def __init__(self, X_train, y_train):
-
         self.X_train = X_train
         self.y_train = y_train
         self.feature_names = list(X_train.columns)
@@ -25,7 +22,6 @@ class ClosedFormRegressionModel:
 
     def build_model(self):
         """Fit the model by solving the normal equation."""
-
         X = self.X_train.to_numpy()
         Y = self.y_train.to_numpy()
 
@@ -43,7 +39,6 @@ class ClosedFormRegressionModel:
 
     def get_parameters(self):
         """Return a DataFrame of (feature, coefficient) pairs."""
-
         return pd.DataFrame({
             "Feature": self.feature_names,
             "Coefficient": self.coefficients.round(3),
@@ -51,7 +46,6 @@ class ClosedFormRegressionModel:
 
     def predict(self, X):
         """Predict y for new inputs X (same feature order as training)."""
-
         X = np.asarray(X)
         X = np.hstack([np.ones((X.shape[0], 1)), X])
         return X @ self.coefficients

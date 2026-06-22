@@ -1,14 +1,13 @@
-"""
-Mini-Batch Stochastic Gradient Descent Linear Regression
---------------------------------------------------------
-Same loss as batch gradient descent, but the gradient is estimated from a
-small random mini-batch each step instead of the full dataset. This makes
-each update cheaper and adds noise that can help escape poor local regions,
-at the cost of a noisier convergence path.
+"""Mini-batch stochastic gradient descent linear regression.
 
-    For each epoch:
+Same loss as batch gradient descent, but the gradient is estimated from a small
+random mini-batch each step instead of the full dataset. Each update is cheaper
+and the added noise can help escape poor regions, at the cost of a noisier
+convergence path.
+
+    for each epoch:
         shuffle rows
-        for each mini-batch of size `batch_size`:
+        for each mini-batch of size batch_size:
             beta := beta - alpha * (1/m) * X_batch^T (X_batch beta - y_batch)
 """
 
@@ -17,9 +16,7 @@ import pandas as pd
 
 
 class StochasticGradientDescentRegressionModel:
-
     def __init__(self, X_train, y_train, epochs, batch_size, learning_rate=0.01):
-
         self.X_train = X_train
         self.y_train = y_train
         self.epochs = epochs
@@ -30,7 +27,6 @@ class StochasticGradientDescentRegressionModel:
 
     def build_model(self):
         """Fit the model with mini-batch SGD."""
-
         X = self.X_train.to_numpy()
         Y = self.y_train.to_numpy()
 
@@ -59,7 +55,6 @@ class StochasticGradientDescentRegressionModel:
 
     def get_parameters(self):
         """Return a DataFrame of (feature, coefficient) pairs."""
-
         return pd.DataFrame({
             "Feature": self.feature_names,
             "Coefficient": self.coefficients.round(3),
@@ -67,7 +62,6 @@ class StochasticGradientDescentRegressionModel:
 
     def predict(self, X):
         """Predict y for new inputs X (same feature order as training)."""
-
         X = np.asarray(X)
         X = np.hstack([np.ones((X.shape[0], 1)), X])
         return X @ self.coefficients
